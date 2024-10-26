@@ -15,7 +15,7 @@ import music.business.*;
 public class ProductIO {
 
     private static List<Product> products = null;
-    private static String filePath = null;
+    private static String filePath = "WEB-INF/product.txt";
 // Called once from the controller based on servlet context
 
     public static void init(String filePath) {
@@ -23,8 +23,16 @@ public class ProductIO {
     }
 
     public static List<Product> selectProducts() {
-        products = new ArrayList<Product>();
+        if (products == null) {
+            products = new ArrayList<Product>();
+        } else {
+            products.clear(); // Clear the list to avoid duplicate entries
+        }
+
         File file = new File(filePath);
+        if (!file.exists()) {
+            return products; // Return an empty list if the file does not exist
+        }
         try {
             BufferedReader in
                     = new BufferedReader(
