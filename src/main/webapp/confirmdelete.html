@@ -4,12 +4,63 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
 -->
 <html>
-    <head>
-        <title>Product Maintenance</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+
+    <title>Confirm Delete</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #e74c3c;
+        }
+        .button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .confirm {
+            background-color: #e74c3c; /* Red for delete */
+        }
+        .cancel {
+            background-color: #3498db; /* Blue for cancel */
+        }
+    </style>
+
+<body>
+    <div class="container">
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete the following item?</p>
+        
+        <div>
+            <strong>Product Name:</strong> <span>${product.name}</span><br>
+            <strong>Product ID:</strong> <span>${product.id}</span><br>
+            <strong>Product Description:</strong> <span>${product.description}</span><br>
+            <strong>Price:</strong> <span>${product.price}</span>
+        </div>
+        
+        <form action="deleteProduct" method="POST">
+            <input type="hidden" name="productId" value="${product.id}"/>
+            <button type="submit" class="button confirm">Delete</button>
+            <a href="productList" class="button cancel">Cancel</a>
+        </form>
+    </div>
+</body>
 </html>
+ 
+
