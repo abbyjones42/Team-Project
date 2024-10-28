@@ -15,14 +15,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             margin: 0;
             padding: 20px;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
         h2 {
             color: #e74c3c;
         }
@@ -43,24 +35,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     </style>
 
 <body>
-    <div class="container">
         <h2>Confirm Deletion</h2>
         <p>Are you sure you want to delete the following item?</p>
-        
-        <div>
-            <strong>Product Name:</strong> <span>${product.name}</span><br>
-            <strong>Product ID:</strong> <span>${product.id}</span><br>
-            <strong>Product Description:</strong> <span>${product.description}</span><br>
-            <strong>Price:</strong> <span>${product.price}</span>
-        </div>
+        <form action="ProductSelectServlet" method="POST">
+            <p>
+                <label for="code">Code:</label>
+                <input type="text" id="code" name="code" value='${productCode}'>
+            </p>
+            <p>
+                <label for='description'>Description:</label>
+                <input type="text" id="description" name="description" value='$(productDescription}'>
+            </p>
+            <p>
+                <label for='price'>Price:</label>
+                <input type="text" id="price" name="price" value='${productPrice}'>
+            </p>
+        </form>
         
         <form action="deleteProduct" method="POST">
             <input type="hidden" name="productId" value="${product.id}"/>
             <button type="submit" class="button confirm">Delete</button>
             <a href="productList" class="button cancel">Cancel</a>
         </form>
-    </div>
 </body>
 </html>
  
-
