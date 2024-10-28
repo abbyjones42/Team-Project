@@ -51,6 +51,6 @@
             }
         %>
     </table>
-    <button><a href="product.jsp">Add product</a></button>
+     <button onclick= "document.location='product.jsp'">Add product</a></button>
 </body>
 </html>
