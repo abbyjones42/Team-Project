@@ -15,6 +15,7 @@
     <body>
         <h1>Product</h1>
         <form action="ProductSelectServlet" method="POST">
+            <input type="hidden" id="productID" name="productID" value=<%= request.getAttribute("productID")%>">
             <p>
                 <label for="code">Code:</label>
                 <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode")%>" required>
