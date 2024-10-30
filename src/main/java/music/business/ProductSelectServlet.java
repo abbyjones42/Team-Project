@@ -38,6 +38,7 @@ public class ProductSelectServlet extends HttpServlet {
         
         if (product != null) {
             // Set the product as a request attribute
+            request.setAttribute("productID", product.getId());
             request.setAttribute("productCode", product.getCode());
             request.setAttribute("productDescription", product.getDescription());
             request.setAttribute("productPrice", product.getPrice());
@@ -61,11 +62,13 @@ public class ProductSelectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Handle form submission (update product)
+        long productID = Long.parseLong(request.getParameter("productID").trim().replace("\"", ""));
         String code = request.getParameter("code");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
 
         Product product = new Product();
+        product.setId(productID);
         product.setCode(code);
         product.setDescription(description);
         product.setPrice(price);
