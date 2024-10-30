@@ -40,15 +40,18 @@ public class ProductIO {
             String line = in.readLine();
             while (line != null) {
                 StringTokenizer t = new StringTokenizer(line, "|");
-                if (t.countTokens() >= 3) {
+                if (t.countTokens() >= 4) {
+                    long productID = Long.parseLong(t.nextToken());
                     String code = t.nextToken();
                     String description = t.nextToken();
-                    String priceAsString = t.nextToken();
-                    double price = Double.parseDouble(priceAsString);
+                    double price = Double.parseDouble(t.nextToken());
+                    
                     Product p = new Product();
+                    p.setId(productID);
                     p.setCode(code);
                     p.setDescription(description);
                     p.setPrice(price);
+                    
                     products.add(p);
                 }
                 line = in.readLine();
@@ -88,9 +91,10 @@ public class ProductIO {
                     = new PrintWriter(
                             new FileWriter(file));
             for (Product p : products) {
-                out.println(p.getCode() + "|"
-                        + p.getDescription() + "|"
-                        + p.getPrice());
+                out.println(p.getId() + "|" 
+                            + p.getCode() + "|"
+                            + p.getDescription() + "|"
+                            + p.getPrice());
             }
             out.close();
         } catch (IOException e) {
@@ -108,9 +112,9 @@ public class ProductIO {
         products = selectProducts();
         for (int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
-            if (product.getCode() != null
-                    && product.getCode().equalsIgnoreCase(p.getCode())) {
-                products.set(i, product);
+                 if(p.getId() == product.getId())
+            {
+                 products.set(i, product);
             }
         }
         saveProducts(products);
