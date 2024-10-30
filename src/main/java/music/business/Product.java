@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
 
-    private Long productId;
+    private long productId;
     private String code;
     private String description;
     private double price;
@@ -21,11 +21,11 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Long getId() {
+    public long getId() {
         return productId;
     }
 
-    public void setId(Long productId) {
+    public void setId(long productId) {
         this.productId = productId;
     }
 
