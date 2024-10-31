@@ -15,18 +15,18 @@
     <body>
         <h1>Product</h1>
         <form action="ProductSelectServlet" method="POST">
-            <input type="hidden" id="productID" name="productID" value=<%= request.getAttribute("productID")%>">
+            <input type="hidden" id="productID" name="productID" value="<%= request.getAttribute("productID") != null ? request.getAttribute("productID"): ""%>">
             <p>
                 <label for="code">Code:</label>
-                <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode")%>" required>
+                <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode") != null ? request.getAttribute("productCode"): ""%>" required>
             </p>
             <p>
                 <label for="description">Description:</label>
-                <input type="text" id="description" name="description" value="<%= request.getAttribute("productDescription")%>" required>
+                <input type="text" id="description" name="description" value="<%= request.getAttribute("productDescription") != null ? request.getAttribute("productDescription"): ""%>" required>
             </p>
             <p>
                 <label for="price">Price:</label>
-                <input type="text" id="price" name="price" value="<%= request.getAttribute("productPrice")%>" required>
+                <input type="text" id="price" name="price" value="<%= request.getAttribute("productPrice") != null ? request.getAttribute("productPrice"): ""%>" required>
             </p>
             <button type="submit">Update Product</button>
             <button><a href="products.html">View Products</button>

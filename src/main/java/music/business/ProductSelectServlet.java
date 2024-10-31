@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import music.data.ProductIO;
 
 /**
@@ -19,6 +20,7 @@ import music.data.ProductIO;
  */
 @WebServlet(name = "ProductSelectServlet", urlPatterns = {"/ProductSelectServlet"})
 public class ProductSelectServlet extends HttpServlet {
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -35,7 +37,7 @@ public class ProductSelectServlet extends HttpServlet {
 
         // Retrieve the product using ProductIO
         Product product = ProductIO.selectProduct(code);
-        
+
         if (product != null) {
             // Set the product as a request attribute
             request.setAttribute("productID", product.getId());
@@ -62,20 +64,37 @@ public class ProductSelectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Handle form submission (update product)
-        long productID = Long.parseLong(request.getParameter("productID").trim().replace("\"", ""));
+        String productIDStr = request.getParameter("productID");
         String code = request.getParameter("code");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
 
         Product product = new Product();
-        product.setId(productID);
+
+        if (productIDStr != null && !productIDStr.isEmpty()) {
+            // Update existing product
+            long productID = Long.parseLong(productIDStr);
+            product.setId(productID);
+        } else {
+            // Insert new product with an incremented ID
+            List<Product> productList = ProductIO.selectProducts();
+            long maxId = productList.stream()
+                    .mapToLong(Product::getId)
+                    .max()
+                    .orElse(0);
+            product.setId(maxId + 1);
+        }
+
         product.setCode(code);
         product.setDescription(description);
         product.setPrice(price);
 
-        // Update the product
-        ProductIO.updateProduct(product);
-        
+        if (productIDStr != null && !productIDStr.isEmpty()) {
+            ProductIO.updateProduct(product);
+        } else {
+            ProductIO.insertProduct(product);
+        }
+
         // Redirect to the product list or confirmation page
         response.sendRedirect("products.html");
     }
