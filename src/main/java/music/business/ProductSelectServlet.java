@@ -44,12 +44,14 @@ public class ProductSelectServlet extends HttpServlet {
             request.setAttribute("productCode", product.getCode());
             request.setAttribute("productDescription", product.getDescription());
             request.setAttribute("productPrice", product.getPrice());
+            request.setAttribute("isUpdate", true);
 
             // Forward to product.jsp
             RequestDispatcher dispatcher = request.getRequestDispatcher("product.jsp");
             dispatcher.forward(request, response);
         } else {
             // Handle the case where the product is not found
+            request.setAttribute("isUpdate", false);
             response.sendRedirect("products.html"); // or show an error page
         }
     }
@@ -67,16 +69,53 @@ public class ProductSelectServlet extends HttpServlet {
         String productIDStr = request.getParameter("productID");
         String code = request.getParameter("code");
         String description = request.getParameter("description");
-        double price = Double.parseDouble(request.getParameter("price"));
+        String priceStr = request.getParameter("price");
 
+        // Flag to track validation errors
+        boolean errors = false;
+
+        // Validate fields and set error messages
+        if (code == null || code.trim().isEmpty()) {
+            request.setAttribute("codeError", "Code is required. Please enter a valid code.");
+            errors = true;
+        }
+        if (description == null || description.trim().isEmpty()) {
+            request.setAttribute("descriptionError", "Description is required. Please enter a valid description.");
+            errors = true;
+        }
+
+        double price = 0;
+        if (priceStr == null || priceStr.trim().isEmpty()) {
+            request.setAttribute("priceError", "Price is required. Please enter a valid price. (Ex. 19.99)");
+            errors = true;
+        } else {
+            try {
+                price = Double.parseDouble(priceStr);
+            } catch (NumberFormatException e) {
+                request.setAttribute("priceError", "Invalid price format.");
+                errors = true;
+            }
+        }
+
+        // If there are errors, forward back to the form with errors
+        if (errors) {
+            request.setAttribute("productCode", code);
+            request.setAttribute("productDescription", description);
+            request.setAttribute("productPrice", priceStr);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("product.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        // Create or update product if there are no errors
         Product product = new Product();
 
+        // Set product ID if updating an existing product
         if (productIDStr != null && !productIDStr.isEmpty()) {
-            // Update existing product
             long productID = Long.parseLong(productIDStr);
             product.setId(productID);
         } else {
-            // Insert new product with an incremented ID
+            // Assign a new ID if inserting a new product
             List<Product> productList = ProductIO.selectProducts();
             long maxId = productList.stream()
                     .mapToLong(Product::getId)
@@ -85,17 +124,19 @@ public class ProductSelectServlet extends HttpServlet {
             product.setId(maxId + 1);
         }
 
+        // Set product fields from validated input
         product.setCode(code);
         product.setDescription(description);
         product.setPrice(price);
 
+        // Save or update the product in the database
         if (productIDStr != null && !productIDStr.isEmpty()) {
             ProductIO.updateProduct(product);
         } else {
             ProductIO.insertProduct(product);
         }
 
-        // Redirect to the product list or confirmation page
+        // Redirect to product list or confirmation page
         response.sendRedirect("products.html");
     }
 }
