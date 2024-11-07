@@ -16,7 +16,7 @@
         <h2>Confirm Deletion</h2>
         <p>Are you sure you want to delete the following item?</p>
         
-        <form action="ProductListServlet" method="POST">
+        <form action="ProductSelectServlet" method="POST">
          <p>
                 <label for="code">Code:</label>
                 <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode")%>" required>
@@ -34,7 +34,7 @@
         <form action="deleteProduct" method="POST">
             <input type="hidden" name="code" value="${productCode}"/>
             <button type="submit">Delete</button>
-            <button><a href="products.html">Cancel</button>
+            <button onclick = "products.html">Cancel</button>
         </form>
 </body>
 </html>
