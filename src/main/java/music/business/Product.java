@@ -21,6 +21,10 @@ public class Product implements Serializable {
     public Product() {
     }
 
+    public Product(long productID, String code, String description, double price) {
+        
+    }
+
     public long getId() {
         return productId;
     }

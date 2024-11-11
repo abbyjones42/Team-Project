@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import music.data.ProductDB;
 import music.data.ProductIO;
 
 /**
@@ -19,13 +20,13 @@ import music.data.ProductIO;
  */
 @WebServlet(name = "ProductSelectServlet", urlPatterns = {"/ProductSelectServlet"})
 public class ProductSelectServlet extends HttpServlet {
-    @Override
+    /*@Override
     public void init() throws ServletException {
         super.init();
         // Initialize ProductIO with the correct file path
         String filePath = getServletContext().getRealPath("/WEB-INF/product.txt");
         ProductIO.init(filePath);
-    }
+    }*/
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,21 +34,18 @@ public class ProductSelectServlet extends HttpServlet {
 
         String code = request.getParameter("code");
 
-        // Retrieve the product using ProductIO
-        Product product = ProductIO.selectProduct(code);
-        
+        // Retrieve the product using ProductDB
+        Product product = ProductDB.selectProduct(code);
+
         if (product != null) {
-            // Set the product as a request attribute
             request.setAttribute("productID", product.getId());
             request.setAttribute("productCode", product.getCode());
             request.setAttribute("productDescription", product.getDescription());
             request.setAttribute("productPrice", product.getPrice());
 
-            // Forward to product.jsp
             RequestDispatcher dispatcher = request.getRequestDispatcher("product.jsp");
             dispatcher.forward(request, response);
         } else {
-            // Handle the case where the product is not found
             response.sendRedirect("products.html"); // or show an error page
         }
     }
@@ -61,22 +59,14 @@ public class ProductSelectServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Handle form submission (update product)
-        long productID = Long.parseLong(request.getParameter("productID").trim().replace("\"", ""));
+        long productID = Long.parseLong(request.getParameter("productID"));
         String code = request.getParameter("code");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
 
-        Product product = new Product();
-        product.setId(productID);
-        product.setCode(code);
-        product.setDescription(description);
-        product.setPrice(price);
+        Product product = new Product(productID, code, description, price);
 
-        // Update the product
-        ProductIO.updateProduct(product);
-        
-        // Redirect to the product list or confirmation page
+        ProductDB.updateProduct(product);
         response.sendRedirect("products.html");
     }
 }
