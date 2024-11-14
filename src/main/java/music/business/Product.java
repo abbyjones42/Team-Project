@@ -22,7 +22,10 @@ public class Product implements Serializable {
     }
 
     public Product(long productID, String code, String description, double price) {
-        
+        this.productId = productID;
+        this.code = code;
+        this.description = description;
+        this.price = price;
     }
 
     public long getId() {
