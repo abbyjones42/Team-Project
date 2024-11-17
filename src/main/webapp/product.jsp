@@ -4,6 +4,7 @@
     Author     : jared
 --%>
 
+<%@page import="music.business.Product"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,21 +16,26 @@
     <body>
         <h1>Product</h1>
         <form action="ProductSelectServlet" method="POST">
-            <input type="hidden" id="productID" name="productID" value=<%= request.getAttribute("productID")%>">
+            <input type="hidden" id="productID" name="productID" 
+                   value="<%= request.getAttribute("product") != null ? ((Product) request.getAttribute("product")).getId() : "" %>">
+            
             <p>
                 <label for="code">Code:</label>
-                <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode")%>" required>
+                <input type="text" id="code" name="code" 
+                       value="<%= request.getAttribute("product") != null ? ((Product) request.getAttribute("product")).getCode() : "" %>" required>
             </p>
             <p>
                 <label for="description">Description:</label>
-                <input type="text" id="description" name="description" value="<%= request.getAttribute("productDescription")%>" required>
+                <input type="text" id="description" name="description" 
+                       value="<%= request.getAttribute("product") != null ? ((Product) request.getAttribute("product")).getDescription() : "" %>" required>
             </p>
             <p>
                 <label for="price">Price:</label>
-                <input type="text" id="price" name="price" value="<%= request.getAttribute("productPrice")%>" required>
+                <input type="text" id="price" name="price" 
+                       value="<%= request.getAttribute("product") != null ? ((Product) request.getAttribute("product")).getPrice() : "" %>" required>
             </p>
             <button type="submit">Update Product</button>
-            <button><a href="products.html">View Products</button>
+            <button><a href="products.jsp">View Products</a></button>
         </form>
     </body>
 </html>

@@ -7,34 +7,22 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deletion Page</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Deletion Page</title>
+    </head>
+    <body>
         <h2>Confirm Deletion</h2>
         <p>Are you sure you want to delete the following item?</p>
-        
-        <form action="ProductSelectServlet" method="POST">
-         <p>
-                <label for="code">Code:</label>
-                <input type="text" id="code" name="code" value="<%= request.getAttribute("productCode")%>" required>
-            </p>
-            <p>
-                <label for="description">Description:</label>
-                <input type="text" id="description" name="description" value="<%= request.getAttribute("productDescription")%>" required>
-            </p>
-            <p>
-                <label for="price">Price:</label>
-                <input type="text" id="price" name="price" value="<%= request.getAttribute("productPrice")%>" required>
-            </p>
-        </form>
- 
-        <form action="deleteProduct" method="POST">
-            <input type="hidden" name="code" value="${productCode}"/>
+        <p>Code: <%= request.getAttribute("productCode") != null ? request.getAttribute("productCode") : "" %></p>
+        <p>Description: <%= request.getAttribute("productDescription") != null ? request.getAttribute("productDescription") : "" %></p>
+        <p>Price: <%= request.getAttribute("productPrice") != null ? request.getAttribute("productPrice") : "" %></p>
+
+        <form action="ProductDeleteServlet" method="POST">
+            <input type="hidden" name="productID" value="<%= request.getAttribute("productID") %>"/>
             <button type="submit">Delete</button>
-            <button onclick = "products.html">Cancel</button>
+            <button type="button"><a href="products.jsp">Cancel</button></a>
         </form>
-</body>
+    </body>
 </html>

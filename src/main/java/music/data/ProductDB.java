@@ -75,12 +75,12 @@ public class ProductDB {
             ps.setString(1, code);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Product p = new Product();
-                    p.setId(rs.getInt("ProductID"));
-                    p.setCode(rs.getString("ProductCode"));
-                    p.setDescription(rs.getString("ProductDescription"));
-                    p.setPrice(rs.getDouble("ProductPrice"));
-                    return p;
+                Product product = new Product();
+                    product.setId(rs.getInt("productID"));
+                    product.setCode(rs.getString("productCode"));
+                    product.setDescription(rs.getString("productDescription"));
+                    product.setPrice(rs.getDouble("productPrice"));
+                    return product;
             }     
         } catch (SQLException e) {
             e.printStackTrace();

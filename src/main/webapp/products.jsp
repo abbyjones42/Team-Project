@@ -3,17 +3,18 @@
     Created on : Oct 26, 2024, 4:25:25 PM
     Author     : jared
 --%>
-
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="music.business.Product" %>
-<%@ page import="music.data.ProductIO" %>
+<%@ page import="music.data.ProductDB" %>
+
+<%
+    List<Product> products = ProductDB.selectProducts();
+%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product Maintenance</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
     <style>
         table {
             border-collapse: collapse;
@@ -21,8 +22,8 @@
             width: 100%;
         }
         th, td {
+            padding: 8px;
             border: 2px solid black;
-            padding: 8px 10px;
         }
     </style>
 </head>
@@ -36,21 +37,16 @@
             <th>Edit</th>
             <th>Delete</th>
         </tr>
-        <%
-            List<Product> productList = (List<Product>) request.getAttribute("productList");
-            for (Product p : productList) {
-        %>
+        <% for (Product product : products) { %>
         <tr>
-            <td><%= p.getCode() %></td>
-            <td><%= p.getDescription() %></td>
-            <td>$<%= p.getPrice() %></td>
-            <td><a href="ProductSelectServlet?code=<%= p.getCode() %>">Edit</a></td>
-            <td><a href="confirmdelete.html">Delete</a></td>
+            <td><%= product.getCode() %></td>
+            <td><%= product.getDescription() %></td>
+            <td><%= product.getPriceCurrencyFormat() %></td>
+            <td><a href="ProductSelectServlet?code=<%= product.getCode() %>">Edit</a></td>
+            <td><a href="ProductDeleteServlet?code=<%= product.getCode() %>">Delete</a></td>
         </tr>
-        <%
-            }
-        %>
+        <% } %>
     </table>
-     <button onclick= "document.location='product.jsp'">Add product</a></button>
+    <button><a href="product.jsp">Add Product</a></button>
 </body>
 </html>

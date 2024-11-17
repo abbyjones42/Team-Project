@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import music.data.ProductDB;
-import music.data.ProductIO;
 
 /**
  *
@@ -49,24 +48,47 @@ public class ProductSelectServlet extends HttpServlet {
             response.sendRedirect("products.html"); // or show an error page
         }
     }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String productCode = request.getParameter("code");
+
+        if (productCode == null || productCode.isEmpty()) {
+            // Redirect to the product list if no code is provided
+            response.sendRedirect("products.jsp");
+            return;
+        }
+
+        
+        Product product = ProductDB.selectProduct(productCode);
+        if (product == null) {
+            // If the product doesn't exist, redirect to the product list
+            response.sendRedirect("products.jsp");
+            return;
+        }
+
+        // Set product details as request attributes to be accessed in the JSP form
+        request.setAttribute("product", product);
+
+        // Forward to the product.jsp page to prepopulate the form fields
+        request.getRequestDispatcher("product.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         long productID = Long.parseLong(request.getParameter("productID"));
-        String code = request.getParameter("code");
-        String description = request.getParameter("description");
-        double price = Double.parseDouble(request.getParameter("price"));
+        String productCode = request.getParameter("code");
+        String productDescription = request.getParameter("description");
+        double productPrice = Double.parseDouble(request.getParameter("price"));
 
-        Product product = new Product(productID, code, description, price);
+        // Create a product object with the new values
+        Product product = new Product(productID, productCode, productDescription, productPrice);
 
+        // Update the product in the database
         ProductDB.updateProduct(product);
-        response.sendRedirect("products.html");
+
+        // Redirect to the products list page after update
+        response.sendRedirect("products.jsp");
     }
 }
