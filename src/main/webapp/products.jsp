@@ -8,8 +8,9 @@
 <%@ page import="music.business.Product" %>
 <%@ page import="music.data.ProductDB" %>
 
-<%
-    List<Product> products = ProductDB.selectProducts();
+<% 
+    // Get the product list from the request attribute
+    List<Product> products = (List<Product>) request.getAttribute("products"); 
 %>
 <!DOCTYPE html>
 <html>
@@ -47,6 +48,6 @@
         </tr>
         <% } %>
     </table>
-    <button><a href="product.jsp">Add Product</a></button>
+    <button><a href="ProductListServlet">Add Product</a></button>
 </body>
 </html>

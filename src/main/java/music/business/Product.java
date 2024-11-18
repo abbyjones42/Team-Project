@@ -8,14 +8,33 @@ package music.business;
  *
  * @author jared
  */
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.text.NumberFormat;
 import java.io.Serializable;
 
+        
+@Entity 
+@Table (name = "product")
+//@GeneratedValue(strategy = GenerationType.auto)
+
 public class Product implements Serializable {
 
+    @Id
+    @Column(name = "PRODUCTID")
     private long productId;
+    
+    @Column(name = "CODE")
     private String code;
+    
+    @Column(name = "DESCRIPTION")
     private String description;
+    
+    @Column(name = "PRICE")
     private double price;
 
     public Product() {
@@ -84,5 +103,13 @@ public class Product implements Serializable {
 
     public String getProductType() {
         return "Audio CD";
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 }

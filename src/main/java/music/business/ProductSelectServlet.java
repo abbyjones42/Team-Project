@@ -51,27 +51,15 @@ public class ProductSelectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String productCode = request.getParameter("code");
+        String code = request.getParameter("code");
+        Product product = ProductDB.selectProduct(code);
 
-        if (productCode == null || productCode.isEmpty()) {
-            // Redirect to the product list if no code is provided
+        if (product != null) {
+            request.setAttribute("product", product);
+            getServletContext().getRequestDispatcher("/product.jsp").forward(request, response);
+        } else {
             response.sendRedirect("products.jsp");
-            return;
         }
-
-        
-        Product product = ProductDB.selectProduct(productCode);
-        if (product == null) {
-            // If the product doesn't exist, redirect to the product list
-            response.sendRedirect("products.jsp");
-            return;
-        }
-
-        // Set product details as request attributes to be accessed in the JSP form
-        request.setAttribute("product", product);
-
-        // Forward to the product.jsp page to prepopulate the form fields
-        request.getRequestDispatcher("product.jsp").forward(request, response);
     }
 
     @Override
