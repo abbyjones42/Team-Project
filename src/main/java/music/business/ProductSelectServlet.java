@@ -77,18 +77,30 @@ public class ProductSelectServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        long productID = Long.parseLong(request.getParameter("productID"));
-        String productCode = request.getParameter("code");
-        String productDescription = request.getParameter("description");
-        double productPrice = Double.parseDouble(request.getParameter("price"));
+         try {
+        String productIdStr = request.getParameter("productID");
+        String code = request.getParameter("code");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
 
-        // Create a product object with the new values
-        Product product = new Product(productID, productCode, productDescription, productPrice);
+        if (productIdStr == null || productIdStr.isEmpty()) {
+            //Create a new product
+            Product newProduct = new Product();
+            newProduct.setCode(code);
+            newProduct.setDescription(description);
+            newProduct.setPrice(price);
+            ProductDB.addProduct(newProduct);
+        } else {
+            //Update the existing product
+            long productID = Long.parseLong(productIdStr);
+            Product existingProduct = new Product(productID, code, description, price);
+            ProductDB.updateProduct(existingProduct);
+        }
 
-        // Update the product in the database
-        ProductDB.updateProduct(product);
-
-        // Redirect to the products list page after update
+        // Redirect back to products.jsp to show the updated list
         response.sendRedirect("products.jsp");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 }
