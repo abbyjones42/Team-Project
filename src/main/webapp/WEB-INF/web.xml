@@ -17,4 +17,23 @@
             30
         </session-timeout>
     </session-config>
+    <security-role>
+        <description>Programmer/Service Status</description>
+        <role-name>Programmer</role-name>
+    </security-role>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Product Maintenance App</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>librarian</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Librarian Login</realm-name>
+    </login-config>
 </web-app>
