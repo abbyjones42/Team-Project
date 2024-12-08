@@ -1,0 +1,113 @@
+package music.data;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+import music.business.Product;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class ProductDBTest {
+
+    @Mock
+    private EntityManager mockEntityManager;
+
+    @Mock
+    private EntityTransaction mockTransaction;
+
+    @Mock
+    private TypedQuery<Product> mockQuery;
+
+    @InjectMocks
+    private ProductDB productDB;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+    }
+
+    @Test
+    void testAddProduct() {
+        Product product = new Product();
+        doNothing().when(mockEntityManager).persist(product);
+
+        int result = ProductDB.addProduct(product);
+
+        assertEquals(1, result);
+        verify(mockEntityManager, times(1)).persist(product);
+        verify(mockTransaction).begin();
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    void testUpdateProduct() {
+        Product product = new Product();
+        when(mockEntityManager.merge(product)).thenReturn(product);
+
+        int result = ProductDB.updateProduct(product);
+
+        assertEquals(1, result);
+        verify(mockEntityManager, times(1)).merge(product);
+        verify(mockTransaction).begin();
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    void testDeleteProduct() {
+        long productId = 1L;
+        Product product = new Product();
+        when(mockEntityManager.find(Product.class, productId)).thenReturn(product);
+        doNothing().when(mockEntityManager).remove(product);
+
+        int result = ProductDB.deleteProduct(productId);
+
+        assertEquals(1, result);
+        verify(mockEntityManager, times(1)).find(Product.class, productId);
+        verify(mockEntityManager, times(1)).remove(product);
+        verify(mockTransaction).begin();
+        verify(mockTransaction).commit();
+    }
+
+    @Test
+    void testSelectProduct() {
+        String code = "testCode";
+        Product product = new Product();
+        when(mockEntityManager.createQuery("SELECT p FROM Product p WHERE p.code = ?", Product.class))
+                .thenReturn(mockQuery);
+        when(mockQuery.setParameter("code", code)).thenReturn(mockQuery);
+        when(mockQuery.getSingleResult()).thenReturn(product);
+
+        Product result = ProductDB.selectProduct(code);
+
+        assertNotNull(result);
+        assertEquals(product, result);
+        verify(mockQuery, times(1)).getSingleResult();
+    }
+
+    @Test
+    void testSelectProducts() {
+        Product product1 = new Product();
+        Product product2 = new Product();
+        List<Product> productList = new ArrayList<>();
+        productList.add(product1);
+        productList.add(product2);
+        when(mockEntityManager.createQuery("SELECT p FROM Product p", Product.class))
+                .thenReturn(mockQuery);
+        when(mockQuery.getResultList()).thenReturn(productList);
+
+        List<Product> result = ProductDB.selectProducts();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(productList, result);
+        verify(mockQuery, times(1)).getResultList();
+    }
+}
